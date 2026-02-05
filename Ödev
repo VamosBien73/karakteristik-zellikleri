@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VaBien Akademi - İspanyolca Testi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --primary-gradient: linear-gradient(135deg, #38bdf8 0%, #1d4ed8 100%);
+            --accent-color: #fbbf24;
+            --success: #22c55e;
+            --error: #ef4444;
+            --text-main: #f8fafc;
+        }
+
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            margin: 0; 
+            padding: 10px; 
+            font-family: 'Poppins', sans-serif;
+            -webkit-tap-highlight-color: transparent; /* Mobil için mavi gölgeyi kaldırır */
+        }
+
+        .container { max-width: 600px; margin: auto; padding-bottom: 50px; }
+
+        .timer-box { 
+            position: sticky; top: 10px; 
+            background: var(--accent-color); 
+            color: #000; padding: 10px; 
+            border-radius: 12px; text-align: center;
+            font-weight: bold; z-index: 999; /* En üstte durmasını sağlar */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            margin-bottom: 20px;
+        }
+
+        .section { 
+            background: var(--card-bg); 
+            padding: 20px; 
+            border-radius: 15px; 
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 10; /* Butonların tıklanabilir olmasını garantiler */
+        }
+
+        .btn-opt { 
+            background: #334155; 
+            color: white; border: none; 
+            padding: 15px; border-radius: 10px; 
+            cursor: pointer; width: 100%;
+            margin-bottom: 8px; font-size: 1rem;
+            transition: transform 0.1s, background 0.2s;
+            display: block; /* Tıklama alanını genişletir */
+        }
+
+        /* Doğru/Yanlış Renkleri */
+        .correct { background-color: var(--success) !important; font-weight: bold; }
+        .wrong { background-color: var(--error) !important; opacity: 1 !important; }
+
+        .feedback { 
+            display: none; padding: 12px; border-radius: 8px; 
+            margin-top: 10px; font-size: 0.9rem; background: rgba(0,0,0,0.3);
+        }
+
+        input[type="text"] {
+            width: 100%; padding: 15px; border-radius: 8px;
+            border: 2px solid #334155; background: #0f172a;
+            color: white; margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="timer-box" id="timer">Yükleniyor...</div>
+
+    <div class="section">
+        <h2 style="color:var(--accent-color); text-align:center;">VaBien Akademi</h2>
+        <p style="text-align:center; font-size:0.9rem;">A1 İspanyolca Kelime Testi</p>
+    </div>
+
+    <div class="section question-block">
+        <p><strong>1. "Trabajar" ne anlama gelir?</strong></p>
+        <button class="btn-opt" onclick="check(this, 'Çalışmak', 'Doğru! Trabajar genel çalışma eylemidir.')">Ders Çalışmak</button>
+        <button class="btn-opt" onclick="check(this, 'Doğru', 'Harika! Doğru cevap.')">Çalışmak</button>
+        <button class="btn-opt" onclick="check(this, 'Yanlış', 'Yanlış! Viajar seyahat etmektir.')">Seyahat Etmek</button>
+        <div class="feedback"></div>
+    </div>
+
+    <div class="section question-block">
+        <p><strong>2. Görseldeki "Tacaño" karakterinin özelliği nedir?</strong></p>
+        <button class="btn-opt" onclick="check(this, 'Cimri', 'Doğru! Tacaño pinti/cimri demektir.')">Cimri</button>
+        <button class="btn-opt" onclick="check(this, 'Yanlış', 'Yanlış! Mentiroso yalancı demektir.')">Yalancı</button>
+        <div class="feedback"></div>
+    </div>
+
+    <button onclick="location.reload()" style="width:100%; background:none; color:gray; border:1px solid gray; padding:10px; border-radius:10px; cursor:pointer;">Testi Sıfırla</button>
+</div>
+
+<script>
+    // Timer
+    let time = 45 * 60;
+    const timerEl = document.getElementById('timer');
+    setInterval(() => {
+        let m = Math.floor(time / 60);
+        let s = time % 60;
+        timerEl.innerText = `Kalan Süre: ${m}:${s < 10 ? '0' : ''}${s}`;
+        time--;
+    }, 1000);
+
+    function check(btn, type, msg) {
+        const parent = btn.parentElement;
+        if(parent.classList.contains('answered')) return; // Tekrar tıklamayı engelle
+
+        const feedback = parent.querySelector('.feedback');
+        const buttons = parent.querySelectorAll('.btn-opt');
+        
+        parent.classList.add('answered');
+        feedback.style.display = "block";
+
+        if(type === 'Doğru' || type === 'Cimri') {
+            btn.classList.add('correct');
+            feedback.innerHTML = "✅ " + msg;
+            feedback.style.color = "#22c55e";
+        } else {
+            btn.classList.add('wrong');
+            feedback.innerHTML = "❌ " + msg;
+            feedback.style.color = "#ef4444";
+            // Doğru şıkkı göster
+            buttons.forEach(b => {
+                if(b.innerText === 'Çalışmak' || b.innerText === 'Cimri') b.classList.add('correct');
+            });
+        }
+    }
+</script>
+</body>
+</html>
